@@ -1,0 +1,23 @@
+Core requirements:
+    Add tasks with descriptions
+    List all tasks
+    Mark tasks complete
+    Delete tasks
+    Save/load from JSON
+
+SEPARATE TODOs:
+
+func printHelp(){
+    Define each command []
+    Make it look good []
+}
+
+func addTask(){
+    Create .json file [x]
+    Write task(s) to file [x] (needs more work)
+}
+
+func delTask(){
+    Read from existing .json file []
+    Delete task(s) from .json file []
+}
