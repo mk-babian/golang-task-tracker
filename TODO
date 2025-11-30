@@ -12,9 +12,13 @@ func printHelp(){
     Make it look good []
 }
 
+func createJson(){
+    Create JSON file [x]
+}
+
 func addTask(){
-    Create .json file [x]
-    Write task(s) to file [x] (needs more work)
+    Add a new task to an empty file [x]
+    Append a task to an existing file (DIFFICULT) []
 }
 
 func delTask(){
