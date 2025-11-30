@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"encoding/json"
 )
 
@@ -15,64 +17,88 @@ func main(){
 	fmt.Println("Welcome to task tracker!\n")
 
 	for 1 < 2{
-		var number int
-		fmt.Print("Provide a number as a command (0 for help, -1 to exit): ")
-		fmt.Scan(&number)
-
-		switch number{
-		case 0:
-			printHelp()
-		case 1:
-			addTask()
-		case 2:
-
-		case -1:
-			os.Exit(0)
-		default:
-
+		var	command string 
+		fmt.Print("Provide a command (\"help\" for help and \"exit\" to quit) : ")
+		fmt.Scanln(&command)
+		
+		switch command{
+			case "help":
+				printHelp()
+			case "create":
+				createJson()
+			case "add":
+				addTask()
+			case "exit":
+				os.Exit(0)
+			default:
+				os.Exit(0)
 		}
 	}	
 }
 
 func printHelp(){
-	
+
 	// TODO:
 	// Define each command (-1, 0, 1, etc...) []
 	// Make it look good []
-
-	fmt.Println("The help page !\n---\tCommands:\t---")
+	
+	fmt.Println("Hello, world!")
 }
 
-func addTask(){
-
-	// TODO:
-		// Create .json file [x]
-		// Write task(s) to file [x]
-		// Save file [x]
-
-	outFile, err := os.Create("out.json")
+func createJson(){
+	outFile, err := os.Create("tasks.json")	
 	if err != nil {
 		panic(err)
 	}
 	defer outFile.Close()
 
-	quest := Task {
-		ID:		1,
-		Title: 	"Quest 1",
+	outFile.Close()
+}
+
+func addTask(){
+
+	// TODO
+		// Append to a .json file using the data given by the user (task name and stuff) []
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Provide a task name: ")
+	taskNameNewLine, err := reader.ReadString('\n')
+
+	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
+	if err != nil {
+		panic(err)
+		return
 	}
+	defer file.Close()
+
+	taskName := strings.TrimSpace(taskNameNewLine)
+	
+	fmt.Println(taskName)
+
+	var idCount int = 1
+	quest := Task {
+		ID:		idCount,
+		Title: 	taskName,
+	}
+	idCount++
 
 	jsonData, err := json.MarshalIndent(quest, "", "\t")
 	if err != nil {
 		panic(err)
+		return
 	}
+	
+	file.Write(jsonData)
 
-	outFile.Write(jsonData)
+	file.Close()
 }
 
 func delTask(){
-	
-	// TODO:
-		// Read from existing .json file []
-		// Delete task from .json file []
-		// Save file []
+	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	file.Close()
 }
