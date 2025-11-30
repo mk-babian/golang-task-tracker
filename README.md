@@ -48,17 +48,17 @@ go run main.go
 The application presents a command menu:
 
 ```
-0  - Display help
-1  - Add task
-2  - [Not implemented]
--1 - Exit
+help  - Display help
+create - Create .json file in running directory
+add - Add a task to tasks.json
+exit - Quit the application
 ```
 
 ### Current Limitations
 
 **Critical Issues:**
-1. **Data Persistence**: Each `addTask()` call overwrites `out.json` instead of appending
-2. **Hard-coded Values**: Task ID and title are static
+1. **Data Persistence**: Each `addTask()` call overwrites `tasks.json` instead of appending
+2. **Hard-coded Values**: Task ID is static
 3. **No Task List**: Cannot view existing tasks
 4. **No Deletion**: Cannot remove tasks
 5. **No Completion Tracking**: No way to mark tasks as done
@@ -78,7 +78,7 @@ type Task struct {
 
 ### File Output
 
-Tasks are saved to `out.json` in the current directory with indented JSON formatting.
+Tasks are saved to `tasks.json` in the current directory with indented JSON formatting.
 
 ## Roadmap
 
