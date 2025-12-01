@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"io"
 	"strings"
 	"encoding/json"
 )
@@ -11,6 +12,7 @@ import (
 type Task struct {
 	ID			int		`json:"id"`
 	Title		string 	`json:"title"`
+	Priority	string 	`json:"priority"`
 }
 
 func main(){
@@ -39,10 +41,15 @@ func main(){
 func printHelp(){
 
 	// TODO:
-	// Define each command (-1, 0, 1, etc...) []
-	// Make it look good []
-	
-	fmt.Println("Hello, world!")
+	// Define each command [x]
+	// Make it look good [x]
+
+	fmt.Println("\t---COMMANDS---\n")	
+	fmt.Println("help - Display help")
+	fmt.Println("create - Create .json file in running directory")
+	fmt.Println("add - Add a task to tasks.json")
+	fmt.Println("exit - Quit the application")
+	fmt.Println()
 }
 
 func createJson(){
@@ -51,8 +58,6 @@ func createJson(){
 		panic(err)
 	}
 	defer outFile.Close()
-
-	outFile.Close()
 }
 
 func addTask(){
@@ -62,35 +67,59 @@ func addTask(){
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Provide a task name: ")
-	taskNameNewLine, err := reader.ReadString('\n')
+	taskName, _ := reader.ReadString('\n')
+	taskName = strings.TrimSpace(taskName)
+	fmt.Print("Provide task priority (low/med/high): ")
+	priority, _ := reader.ReadString('\n')
+	priority = strings.TrimSpace(priority)
 
 	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
 	if err != nil {
-		panic(err)
+		fmt.Println("ERR | Failed open tasks.json", err)
 		return
 	}
 	defer file.Close()
 
-	taskName := strings.TrimSpace(taskNameNewLine)
-	
-	fmt.Println(taskName)
-
-	var idCount int = 1
-	quest := Task {
-		ID:		idCount,
-		Title: 	taskName,
-	}
-	idCount++
-
-	jsonData, err := json.MarshalIndent(quest, "", "\t")
+	fileBytes, err := io.ReadAll(file)
 	if err != nil {
-		panic(err)
+		fmt.Println("ERR | Failed to read file", err)
 		return
 	}
-	
-	file.Write(jsonData)
 
-	file.Close()
+	var tasks []Task
+	if len(fileBytes) > 0 {
+		if err := json.Unmarshal(fileBytes, &tasks); err != nil {
+			fmt.Println("ERR | File contains invalid JSON", err)
+			return
+		}
+	}
+	newID := len(tasks) + 1
+
+	newTask := Task {
+		ID:			newID,
+		Title: 		taskName,
+		Priority: 	priority,
+	}
+
+	tasks = append(tasks, newTask)
+
+	output, err := json.MarshalIndent(tasks, "", "\t")
+	if err != nil {
+		fmt.Println("ERR | Failed to format/marshal file", err)
+		return
+	}
+	if err := file.Truncate(0); err != nil {
+		fmt.Println("ERR | Failed to clear file", err)
+		return
+	}
+	if _, err := file.Seek(0, 0); err != nil {
+		fmt.Println("ERR | Failed to reset file pointer", err)
+		return
+	}
+	if _, err := file.Write(output); err != nil {
+		fmt.Println("ERR | Coudln't write tasks", err)
+		return
+	}
 }
 
 func delTask(){
@@ -99,6 +128,4 @@ func delTask(){
 		panic(err)
 	}
 	defer file.Close()
-
-	file.Close()
 }
