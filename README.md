@@ -48,7 +48,7 @@ go run main.go
 The application presents a command menu:
 
 ```
-help  - Display help
+help - Display help
 create - Create .json file in running directory
 add - Add a task to tasks.json
 exit - Quit the application
@@ -57,11 +57,9 @@ exit - Quit the application
 ### Current Limitations
 
 **Critical Issues:**
-1. **Data Persistence**: Each `addTask()` call overwrites `tasks.json` instead of appending
-2. **Hard-coded Values**: Task ID is static
-3. **No Task List**: Cannot view existing tasks
-4. **No Deletion**: Cannot remove tasks
-5. **No Completion Tracking**: No way to mark tasks as done
+1. **No Task List**: Cannot view existing tasks
+2. **No Deletion**: Cannot remove tasks
+3. **No Completion Tracking**: No way to mark tasks as done
 
 ## Technical Details
 
