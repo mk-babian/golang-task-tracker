@@ -8,8 +8,8 @@ Core requirements:
 SEPARATE TODOs:
 
 func printHelp(){
-    Define each command []
-    Make it look good []
+    Define each command [x]
+    Make it look good [x]
 }
 
 func createJson(){
@@ -18,7 +18,7 @@ func createJson(){
 
 func addTask(){
     Add a new task to an empty file [x]
-    Append a task to an existing file (DIFFICULT) []
+    Append a task to an existing file (DIFFICULT) [x]
 }
 
 func delTask(){
