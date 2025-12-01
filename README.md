@@ -8,7 +8,7 @@ A simple command-line task management application written in Go.
 
 ### Implemented Features
 - Basic CLI interface with command loop
-- Task structure definition (ID, Title)
+- Task structure definition (ID, Title, Priority, etc...)
 - Single task creation with JSON export
 - Help menu framework
 
@@ -16,8 +16,6 @@ A simple command-line task management application written in Go.
 - Complete task listing
 - Task completion marking
 - Task deletion
-- Proper JSON array handling (currently overwrites)
-- Persistent data management
 
 ## Project Structure
 
@@ -61,18 +59,15 @@ exit - Quit the application
 2. **No Deletion**: Cannot remove tasks
 3. **No Completion Tracking**: No way to mark tasks as done
 
-## Technical Details
-
 ### Data Structure
 
 ```go
 type Task struct {
-    ID    int    `json:"id"`
-    Title string `json:"title"`
+    ID          int    `json:"id"`
+    Title       string `json:"title"`
+    Priority    string `json:"priority"`
 }
 ```
-
-**Observation**: The structure lacks a `Completed` field for tracking task status.
 
 ### File Output
 
@@ -83,39 +78,14 @@ Tasks are saved to `tasks.json` in the current directory with indented JSON form
 See `TODO` file for detailed development tasks.
 
 **Priority Items:**
-1. Implement task array management (read/append/write)
-2. Add user input for task creation
-3. Implement task listing functionality
-4. Add task deletion by ID
-5. Add completion status tracking
+1. Implement task listing functionality
+2. Add task deletion by ID
+3. Add completion status tracking
 
 ## License
 
 MIT License - See `LICENSE` file for details.
 
 Copyright (c) 2025 Saba
-
-## Development Notes
-
-**Architectural Suggestions:**
-
-1. **Centralize Data Management**: Create a `TaskManager` struct to handle all CRUD operations
-2. **Use Slice Storage**: Store tasks as `[]Task` instead of single Task objects
-3. **Add Validation**: Implement ID uniqueness checks and input validation
-4. **Error Handling**: Replace `panic()` with graceful error messages
-5. **Configuration**: Consider using a constant for the JSON filename
-
-**Example Improvement:**
-```go
-type TaskManager struct {
-    Tasks    []Task
-    FilePath string
-    NextID   int
-}
-```
-
-This would provide a cleaner abstraction for task operations and state management.
-
----
 
 *The foundation is functional. The path forward requires systematic completion of core features.*
