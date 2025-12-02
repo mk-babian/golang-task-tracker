@@ -18,16 +18,18 @@ type Task struct {
 func main(){
 	fmt.Println("Welcome to task tracker!\n")
 
-	for 1 < 2{
+	for true {
 		var	command string 
 		fmt.Print("Provide a command (\"help\" for help and \"exit\" to quit) : ")
 		fmt.Scanln(&command)
-		
+			
 		switch command{
 			case "help":
 				printHelp()
 			case "create":
 				createJson()
+			case "list":
+				listTasks()
 			case "add":
 				addTask()
 			case "exit":
@@ -47,6 +49,7 @@ func printHelp(){
 	fmt.Println("\t---COMMANDS---\n")	
 	fmt.Println("help - Display help")
 	fmt.Println("create - Create .json file in running directory")
+	fmt.Println("list - List the tasks currently in the .json file")
 	fmt.Println("add - Add a task to tasks.json")
 	fmt.Println("exit - Quit the application")
 	fmt.Println()
@@ -55,16 +58,39 @@ func printHelp(){
 func createJson(){
 	outFile, err := os.Create("tasks.json")	
 	if err != nil {
-		panic(err)
+		fmt.Println("ERR | Failed to create JSON file")
+		return
 	}
 	defer outFile.Close()
 }
 
+func listTasks(){
+	file, err := os.OpenFile("tasks.json", os.O_RDONLY, 0644)
+	if err != nil {
+		fmt.Println("ERR | Failed to open tasks.json", err)
+		return
+	}
+	defer file.Close()
+
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		fmt.Println("ERR | Failed to read file", err)
+		return
+	}
+
+	var tasks []Task
+	err = json.Unmarshal(fileBytes, &tasks)
+	if err != nil {
+		fmt.Println("ERR | Invalid JSON: ", err)
+		return
+	}
+
+	for _, t := range tasks {
+		fmt.Println(t)
+	}
+}
+
 func addTask(){
-
-	// TODO
-		// Append to a .json file using the data given by the user (task name and stuff) []
-
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Provide a task name: ")
 	taskName, _ := reader.ReadString('\n')
