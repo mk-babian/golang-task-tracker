@@ -13,9 +13,9 @@ A simple command-line task management application written in Go.
 - Help menu framework
 
 ### Pending Features
-- Complete task listing
 - Task completion marking
 - Task deletion
+- Other optional features (coloring, personalized settings?)
 
 ## Project Structure
 
@@ -48,6 +48,7 @@ The application presents a command menu:
 ```
 help - Display help
 create - Create .json file in running directory
+list - List the tasks currently in the .json file 
 add - Add a task to tasks.json
 exit - Quit the application
 ```
@@ -55,9 +56,9 @@ exit - Quit the application
 ### Current Limitations
 
 **Critical Issues:**
-1. **No Task List**: Cannot view existing tasks
-2. **No Deletion**: Cannot remove tasks
-3. **No Completion Tracking**: No way to mark tasks as done
+1. **No Deletion**: Cannot remove tasks
+2. **No Completion Tracking**: No way to mark tasks as done
+3. **No additional features**: Optional features haven't yet been added
 
 ### Data Structure
 
@@ -78,7 +79,7 @@ Tasks are saved to `tasks.json` in the current directory with indented JSON form
 See `TODO` file for detailed development tasks.
 
 **Priority Items:**
-1. Implement task listing functionality
+1. Build a better task listing functionality
 2. Add task deletion by ID
 3. Add completion status tracking
 
@@ -87,5 +88,3 @@ See `TODO` file for detailed development tasks.
 MIT License - See `LICENSE` file for details.
 
 Copyright (c) 2025 Saba
-
-*The foundation is functional. The path forward requires systematic completion of core features.*
