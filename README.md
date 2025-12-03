@@ -32,10 +32,10 @@ A simple command-line task management application written in Go.
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/mk-babian/golang-task-tracker.git 
 
 # Navigate to source directory
-cd task-tracker/src
+cd golang-task-tracker/src
 
 # Run the application
 go run main.go
