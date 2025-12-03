@@ -76,12 +76,11 @@ Tasks are saved to `tasks.json` in the current directory with indented JSON form
 
 ## Roadmap
 
-See `TODO` file for detailed development tasks.
-
 **Priority Items:**
 1. Build a better task listing functionality
 2. Add task deletion by ID
 3. Add completion status tracking
+4. Improve/add other features
 
 ## License
 
