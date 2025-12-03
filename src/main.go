@@ -22,20 +22,20 @@ func main(){
 		var	command string 
 		fmt.Print("Provide a command (\"help\" for help and \"exit\" to quit) : ")
 		fmt.Scanln(&command)
-			
+
 		switch command{
-			case "help":
-				printHelp()
-			case "create":
-				createJson()
-			case "list":
-				listTasks()
-			case "add":
-				addTask()
-			case "exit":
-				os.Exit(0)
-			default:
-				os.Exit(0)
+		case "help":
+			printHelp()
+		case "create":
+			createJson()
+		case "list":
+			listTasks()
+		case "add":
+			addTask()
+		case "exit":
+			os.Exit(0)
+		default:
+			os.Exit(0)
 		}
 	}	
 }
@@ -56,12 +56,36 @@ func printHelp(){
 }
 
 func createJson(){
-	outFile, err := os.Create("tasks.json")	
-	if err != nil {
-		fmt.Println("ERR | Failed to create JSON file")
-		return
+	// Check if file exists
+	_, err := os.Stat("tasks.json")
+	if os.IsNotExist(err) {
+		outFile, err := os.Create("tasks.json")	
+		if err != nil {
+			fmt.Println("ERR | Failed to create JSON file")
+			return
+		}
+		defer outFile.Close()
+	}else{
+		fmt.Println("Creating this file will overwrite the current tasks file.")
+		fmt.Print("Are you sure [y/n]: ")
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		answer := strings.ToLower(strings.TrimSpace(input))
+
+		if len(answer) > 0 && answer[0] == 'y' {
+			outFile, err := os.Create("tasks.json")
+			if err != nil {
+				fmt.Println("ERR | Failed to create JSON file:", err)
+				return
+			}
+			defer outFile.Close()
+			fmt.Println("tasks.json overwritten successfully.")
+		} else {
+			fmt.Println("File not created.")
+			return
+		}
 	}
-	defer outFile.Close()
+
 }
 
 func listTasks(){
@@ -98,6 +122,10 @@ func addTask(){
 	fmt.Print("Provide task priority (low/med/high): ")
 	priority, _ := reader.ReadString('\n')
 	priority = strings.TrimSpace(priority)
+	if priority != "low" && priority != "med" && priority != "high" {
+		fmt.Println("Provide a valid priority (low/med/high)!")
+		return
+	}
 
 	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
 	if err != nil {
