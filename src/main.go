@@ -35,7 +35,6 @@ func main(){
 		case "exit":
 			os.Exit(0)
 		default:
-			os.Exit(0)
 		}
 	}	
 }
@@ -66,7 +65,7 @@ func createJson(){
 		}
 		defer outFile.Close()
 	}else{
-		fmt.Println("Creating this file will overwrite the current tasks file.")
+		fmt.Println("\nCreating this file will overwrite the current tasks file.")
 		fmt.Print("Are you sure [y/n]: ")
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
@@ -79,9 +78,9 @@ func createJson(){
 				return
 			}
 			defer outFile.Close()
-			fmt.Println("tasks.json overwritten successfully.")
+			fmt.Println("tasks.json overwritten successfully.\n")
 		} else {
-			fmt.Println("File not created.")
+			fmt.Println("File not created.\n")
 			return
 		}
 	}
@@ -109,9 +108,11 @@ func listTasks(){
 		return
 	}
 
+	fmt.Println("\t\t--Tasks--\n")
 	for _, t := range tasks {
-		fmt.Println(t)
+		fmt.Printf("ID: %d | %s [%s]\n", t.ID, t.Title, strings.ToUpper(t.Priority))
 	}
+	fmt.Print("\n")
 }
 
 func addTask(){
@@ -179,7 +180,8 @@ func addTask(){
 func delTask(){
 	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
 	if err != nil {
-		panic(err)
+		fmt.Println("ERR | Failed to open file")
+		return
 	}
 	defer file.Close()
 }
