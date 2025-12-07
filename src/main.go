@@ -32,6 +32,8 @@ func main(){
 			listTasks()
 		case "add":
 			addTask()
+		case "del":
+			delTask()
 		case "exit":
 			os.Exit(0)
 		default:
@@ -40,16 +42,12 @@ func main(){
 }
 
 func printHelp(){
-
-	// TODO:
-	// Define each command [x]
-	// Make it look good [x]
-
 	fmt.Println("\t---COMMANDS---\n")	
 	fmt.Println("help - Display help")
 	fmt.Println("create - Create .json file in running directory")
 	fmt.Println("list - List the tasks currently in the .json file")
 	fmt.Println("add - Add a task to tasks.json")
+	fmt.Println("del - Delete a task using ID")
 	fmt.Println("exit - Quit the application")
 	fmt.Println()
 }
@@ -178,10 +176,73 @@ func addTask(){
 }
 
 func delTask(){
+	fmt.Print("Enter task ID to delete: ")
+	var taskID int
+	_, err := fmt.Scanln(&taskID)
+	if err != nil {
+		fmt.Println("ERR | Invalid ID format")
+		return
+	}
+
 	file, err := os.OpenFile("tasks.json", os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Println("ERR | Failed to open file")
 		return
 	}
 	defer file.Close()
+
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		fmt.Println("ERR | Failed to read file", err)
+		return
+	}
+
+	var tasks []Task
+	if len(fileBytes) > 0 {
+		if err := json.Unmarshal(fileBytes, &tasks); err != nil {
+			fmt.Println("ERR | File contains invalid JSON", err)
+			return
+		}
+	}
+
+	// Find and remove the task
+	found := false
+	for i, t := range tasks {
+		if t.ID == taskID {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		fmt.Println("ERR | Task ID not found")
+		return
+	}
+
+	// Renumber remaining tasks
+	for i := range tasks {
+		tasks[i].ID = i + 1
+	}
+
+	// Write back to file
+	output, err := json.MarshalIndent(tasks, "", "\t")
+	if err != nil {
+		fmt.Println("ERR | Failed to format/marshal file", err)
+		return
+	}
+	if err := file.Truncate(0); err != nil {
+		fmt.Println("ERR | Failed to clear file", err)
+		return
+	}
+	if _, err := file.Seek(0, 0); err != nil {
+		fmt.Println("ERR | Failed to reset file pointer", err)
+		return
+	}
+	if _, err := file.Write(output); err != nil {
+		fmt.Println("ERR | Couldn't write tasks", err)
+		return
+	}
+
+	fmt.Printf("Task deleted and IDs renumbered.\n\n")
 }
